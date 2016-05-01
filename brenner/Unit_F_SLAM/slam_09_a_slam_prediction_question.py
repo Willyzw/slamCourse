@@ -97,10 +97,9 @@ class ExtendedKalmanFilterSLAM:
         V = self.dg_dcontrol(self.state, control, self.robot_width)
         R3 = dot(V, dot(control_covariance, V.T))
 
-        # --->>> Put your code here.
-
         # Hints:
         # - The number of landmarks is self.number_of_landmarks.
+        N = self.number_of_landmarks        
         # - eye(n) is the numpy function which returns a n x n identity matrix.
         # - zeros((n,n)) returns a n x n matrix which is all zero.
         # - If M is a matrix, M[0:2,1:5] returns the submatrix which consists
@@ -109,12 +108,18 @@ class ExtendedKalmanFilterSLAM:
         # - Similarly for vectors: v[1:3] returns the vector consisting of the
         #   elements 1 and 2, but not 3.
         # - All matrix and vector indices start at 0.
-
+        G = zeros((3+2*N, 3+2*N))
+        G[0:3, 0:3] = G3
+        G[3:4+2*N, 3:4+2*N] = eye(2*N)
+        
+        R = zeros((3+2*N, 3+2*N))
+        R[0:3, 0:3] = R3
+        
         # Now enlarge G3 and R3 to accomodate all landmarks. Then, compute the
         # new covariance matrix self.covariance.
-        self.covariance = dot(G3, dot(self.covariance, G3.T)) + R3  # Replace this.
+        self.covariance = dot(G, dot(self.covariance, G.T)) + R
         # state' = g(state, control)
-        self.state = self.g(self.state, control, self.robot_width)  # Replace this.
+        self.state[0:3] = self.g(self.state[0:3], control, self.robot_width) 
 
     @staticmethod
     def get_error_ellipse(covariance):

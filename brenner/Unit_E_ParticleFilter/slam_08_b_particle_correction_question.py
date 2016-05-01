@@ -7,6 +7,7 @@ from slam_e_library import get_cylinders_from_scan, assign_cylinders
 from math import sin, cos, pi, atan2, sqrt
 import random
 from scipy.stats import norm as normal_dist
+import bisect
 
 
 class ParticleFilter:
@@ -45,9 +46,22 @@ class ParticleFilter:
 
     def predict(self, control):
         """The prediction step of the particle filter."""
-
-        # --->>> Insert code from previous question here.
-        pass  # Remove this.
+        left, right = control
+        # Compute left and right variance.
+        alpha_1 = self.control_motion_factor
+        alpha_2 = self.control_turn_factor
+        sigma_l = sqrt((alpha_1*left)**2 + (alpha_2*(left-right))**2)
+        sigma_r = sqrt((alpha_1*right)**2 + (alpha_2*(left-right))**2)
+        # Then, do a loop over all self.particles and construct a new
+        # list of particles.
+        new_particle = []
+        for particle in self.particles:
+            left_stich = random.gauss(left, sigma_l)
+            right_stich = random.gauss(right, sigma_l)
+            particle_predicted = self.g(particle, [left_stich, right_stich], self.robot_width)
+            new_particle.append(tuple(particle_predicted))
+        # In the end, assign the new list of particles to self.particles.
+        self.particles = new_particle
 
     # Measurement. This is exactly the same method as in the Kalman filter.
     @staticmethod
@@ -64,18 +78,14 @@ class ParticleFilter:
         """Given a measurement and a predicted measurement, computes
            probability."""
         # Compute differences to real measurements.
+        d_measurement = array(measurement) - array(predicted_measurement)
+        d_measurement[1] = (d_measurement[1] + pi) % (2*pi) - pi
 
-        # --->>> Compute difference in distance and bearing angle.
-        # Important: make sure the angle difference works correctly and does
-        # not return values offset by 2 pi or - 2 pi.
-        # You may use the following Gaussian PDF function:
-        # scipy.stats.norm.pdf(x, mu, sigma). With the import in the header,
-        # this is normal_dist.pdf(x, mu, sigma).
-        # Note that the two parameters sigma_d and sigma_alpha discussed
-        # in the lecture are self.measurement_distance_stddev and
-        # self.measurement_angle_stddev.
-        return 1.0  # Replace this.
-
+        sigma_d = self.measurement_distance_stddev
+        sigma_alpha = self.measurement_angle_stddev
+        
+        return normal_dist.pdf(d_measurement[0], 0, sigma_d)*normal_dist.pdf(d_measurement[1], 0, sigma_alpha)
+        
     def compute_weights(self, cylinders, landmarks):
         """Computes one weight for each particle, returns list of weights."""
         weights = []
@@ -84,21 +94,40 @@ class ParticleFilter:
             # [ ((range_0, bearing_0), (landmark_x, landmark_y)), ... ]
             assignment = assign_cylinders(cylinders, p,
                 self.scanner_displacement, landmarks)
-
-            # --->>> Insert code to compute weight for particle p here.
             # This will require a loop over all (measurement, landmark)
             # in assignment. Append weight to the list of weights.
-            weights.append(1.0)  # Replace this.
+            weight = 1
+            for assign in assignment:
+                predicted_measurement = self.h(p, assign[1], self.scanner_displacement)                
+                weight *= self.probability_of_measurement(assign[0], predicted_measurement)
+            
+            weights.append(weight)
         return weights
 
     def resample(self, weights):
         """Return a list of particles which have been resampled, proportional
            to the given weights."""
-
-        # --->>> Insert your code here.
         # You may implement the 'resampling wheel' algorithm
         # described in the lecture.
-        new_particles = self.particles  # Replace this.
+        new_particles = []
+        sum_weights = [0]
+
+        sum_weight = 0
+        for i in xrange(len(weights)):
+            sum_weight += weights[i]
+            sum_weights.append(sum_weight)
+        
+        max_weight = max(weights)
+        offset = 0
+        for i in xrange(len(weights)):
+            offset += random.uniform(0, 2*max_weight)
+            if offset >= sum_weight:
+                offset -= sum_weight
+                
+            index = bisect.bisect(sum_weights, offset)
+            
+            new_particles.append(self.particles[index-1])
+
         return new_particles
 
     def correct(self, cylinders, landmarks):
@@ -136,7 +165,7 @@ if __name__ == '__main__':
     measurement_angle_stddev = 15.0 / 180.0 * pi  # Angle measurement error.
 
     # Generate initial particles. Each particle is (x, y, theta).
-    number_of_particles = 50
+    number_of_particles = 200
     measured_state = (1850.0, 1897.0, 213.0 / 180.0 * pi)
     standard_deviations = (100.0, 100.0, 10.0 / 180.0 * pi)
     initial_particles = []

@@ -41,16 +41,25 @@ class ParticleFilter:
         """The prediction step of the particle filter."""
         left, right = control
 
-        # --->>> Put your code here.
-
         # Compute left and right variance.
-        # alpha_1 is self.control_motion_factor.
-        # alpha_2 is self.control_turn_factor.
+        alpha_1 = self.control_motion_factor
+        alpha_2 = self.control_turn_factor
+        sigma_l = sqrt((alpha_1*left)**2 + (alpha_2*(left-right))**2)
+        sigma_r = sqrt((alpha_1*right)**2 + (alpha_2*(left-right))**2)
+                
         # Then, do a loop over all self.particles and construct a new
         # list of particles.
+        new_particle = []
+        for particle in self.particles:
+            left_stich = random.gauss(left, sigma_l)
+            right_stich = random.gauss(right, sigma_l)
+            particle_predicted = self.g(particle, [left_stich, right_stich], self.robot_width)
+            new_particle.append(tuple(particle_predicted))
+            
         # In the end, assign the new list of particles to self.particles.
         # For sampling, use random.gauss(mu, sigma). (Note sigma in this call
         # is the standard deviation, not the variance.)
+        self.particles = new_particle
 
     def print_particles(self, file_desc):
         """Prints particles to given file_desc output."""
