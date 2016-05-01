@@ -1,0 +1,47 @@
+\documentclass[12pt,a4paper]{article}
+
+\input{../settings}
+
+\begin{document}
+
+\input{../header}
+
+\begin{center}
+{\bf \Large Sheet 2}
+
+{\large Topic: Bayes Filter}
+
+Submission deadline: Nov. 4, 2013\\
+Submit to: \texttt{robotmappingtutors@informatik.uni-freiburg.de}
+\end{center}
+
+\subsubsection*{Exercise: Bayes Filter}
+
+A robot is equipped with a manipulator to paint an object.  Furthermore,
+the robot has a sensor to detect whether the object is colored or blank.
+Neither the manipulation unit nor the sensor are perfect.
+
+From previous experience you know that the robot succeeds in painting a
+blank object with a probability of
+\begin{equation*}
+p( x_{t+1} = \text{colored} \mid x_t = \text{blank}, u_{t+1} = \text{paint} ) = 0.9,
+\end{equation*}
+where $x_{t+1}$ is the state of the object after executing a painting action,
+$u_{t+1}$ is the control command, and $x_t$ is the state of the object
+before performing the action.
+
+The probability that the sensor indicates that the object is colored
+although it is blank is given by $p(z=\text{colored} \mid
+x=\text{blank}) = 0.2$, and the probability that the sensor correctly
+detects a colored object is given by $p(z=\text{colored} \mid x =
+\text{colored}) = 0.7$.
+
+Unfortunately, you have no knowledge about the current state of the
+object. However, after the robot performed a painting action the sensor
+of the robot indicates that the object is colored.
+
+Compute the probability that the object is still blank after the robot
+has performed an action to paint it. Use an appropriate prior
+distribution and justify your choice.
+
+\end{document}

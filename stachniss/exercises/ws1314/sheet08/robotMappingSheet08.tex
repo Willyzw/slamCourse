@@ -1,0 +1,79 @@
+\documentclass[12pt]{article}
+
+\input{../settings}
+
+\begin{document}
+
+\input{../header}
+
+\begin{center}
+{\bf \Large Sheet 8}
+
+{\large Topic: FastSLAM}
+
+Submission deadline: January, 7\\
+Submit to: \texttt{robotmappingtutors@informatik.uni-freiburg.de}
+\end{center}
+
+\subsubsection*{Exercise: FastSLAM Implementation}
+
+Implement the basic FastSLAM 1.0 algorithm as presented in the lecture.
+Assume known correspondences and use a simple feature storage approach,
+i.e., {\bf not} the tree data structure that yields an ${\cal O}(N \log
+M)$ time complexity.
+
+To support this task, we provide a small \emph{Octave} framework (see
+course website).  The framework contains the following folders:
+
+\begin{description}
+\item [data]
+  contains files representing the world definition and sensor readings.
+\item [octave]
+  contains the FastSLAM framework with stubs  to complete.
+\item [plots]
+  this folder is used to store images.
+\end{description}
+
+The below mentioned task should be implemented inside the framework in
+the directory \texttt{octave} by completing the stubs.
+
+After implementing the missing parts, you can run the FastSLAM system.
+To do that, change into the directory octave and launch \emph{Octave}.
+Type \texttt{fastslam} to start the main loop (this may take some time).
+The script will produce plots of the state of the FastSLAM algorithm and
+save them in the \texttt{plots} directory.  You can use the images for
+debugging and to generate an animation. For example, you can use ffmpeg
+from inside the plots directory as follows:
+\begin{verbatim}
+ffmpeg -r 10 -b 500000 -i fastslam_%03d.png fastslam.mp4
+\end{verbatim}
+
+Implement the correction step in \texttt{correction\_step.m}.  For the
+noise in the sensor model, assume that $Q_t$ is a diagonal $2 \times 2$
+matrix as follows
+\begin{align*}
+  Q_t &= \begin{pmatrix} 0.1 & 0 \\ 0 & 0.1 \end{pmatrix}.
+\end{align*}
+
+Some implementation tips:
+\begin{itemize}
+  \item
+    Turn off the visualization to speed up the computation by
+    commenting out the line \texttt{plot\_state(...)} in the file
+    \texttt{fastslam.m}.
+  \item
+    While debugging, run the filter only for a few steps by
+    replacing the for-loop in \texttt{fastslam.m} by
+    something along the lines of \texttt{for t = 1:50}.
+  \item
+    When converting implementations containing for-loops into a
+    vectorized form it often helps to draw the dimensions of the data
+    involved on a sheet of paper.
+  \item
+    Many of the functions in \emph{Octave} can handle matrices and
+    compute values along the rows or columns of a matrix. Some useful
+    functions that support this are \texttt{sum}, \texttt{cumsum},
+    \texttt{sqrt}, \texttt{sin}, \texttt{cos}, and many others.
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,83 @@
+\documentclass[12pt]{article}
+
+\input{../settings}
+\input{../kopf}
+
+\begin{center}
+{\bf \Large Sheet 8}
+
+{\large Topic: Least-Squares}
+
+Submission deadline: January, 14\\
+Submit to: \texttt{robotmappingtutors@informatik.uni-freiburg.de}
+\end{center}
+
+\subsubsection*{Exercise: Odometry Calibration}
+
+Implement an odometry calibration tool based on a least-squares method as presented in the
+lecture. To support this task, we provide a small \emph{Octave} framework (see
+course website).  The framework contains the following folders:
+
+\begin{description}
+\item [data]
+  contains the recorded raw odometry and the motion estimated by a
+  scan-matcher for each time step.
+\item [octave]
+  contains the Octave framework with stubs to complete.
+\item [plots]
+  this folder is used to store images.
+\end{description}
+
+The below mentioned tasks should be implemented inside the framework in
+the directory \texttt{octave} by completing the stubs:
+\begin{itemize}
+  \item
+    Implement the functions in \texttt{ls\_calibrate\_odometry.m} for
+    constructing and solving the least-squares system.
+  \item
+    Implement the function in \texttt{apply\_odometry\_correction.m} for
+    applying the calibration matrix to a set of odometry measurements.
+  \item
+    Implement the function in \texttt{compute\_trajectory.m} for
+    chaining up the relative odometry measurements.
+\end{itemize}
+
+After implementing the missing parts, you can run the framework.  To do
+that, change into the directory octave and launch \emph{Octave}. To
+start the main loop, type \texttt{LSCalibrateOdometry}.  The script will
+produce a plot showing the trajectory of the raw odometry measurements,
+the estimate obtained by scan-matching, and the odometry after applying
+the calibration.  This plot will be saved in the \texttt{plots}
+directory. 
+
+The file odometry-calibration-result.png depicts the result that you should obtain.
+
+%You can use the images for
+%debugging and to generate an animation. For example, you can use ffmpeg
+%from inside the plots directory as follows:
+%\begin{verbatim}
+%ffmpeg -r 10 -b 500000 -i gridmap_%03d.png gridmap.mp4
+%\end{verbatim}
+
+
+%Some implementation tips:
+%\begin{itemize}
+  %\item Use an inverse sensor model corresponding to laser range finders (see lecture slides). The corresponding $p_{free}$ and $p_{occ}$ values are specified in the \texttt{gridmap.m} script. Use $p_{occ}$ to update the occupancy value of cells that laser beam endpoints hit and $p_{free}$ for all other cells along the beam. Use the function \texttt{robotlaser\_as\_cartesian.m} to compute the Cartesian coordinates of the endpoints of a laser scan. The provided \texttt{bresenham.m} function can be used for computing the cells that lie along a laser beam in map coordinates.
+  %\item
+%Compute all occupancy value updates in log odds (not probabilities) so they can be added directly to the map.
+  %\item
+ %Test your implementation with a grid size of 0.5m. Once you are satisfied with your results, you can run the algorithm with an increased resolution (e.g. 0.1m), as this will take considerably more time.
+  %\item
+    %While debugging, run the algorithm only for a few steps by
+    %replacing the for-loop in \texttt{gridmap.m} by
+    %something along the lines of \texttt{for t = 1:10}.
+  %\item
+    %Many of the functions in \emph{Octave} can handle matrices and
+    %compute values along the rows or columns of a matrix. Some useful
+    %functions that support this are \texttt{sum},  \texttt{log},
+    %\texttt{sqrt}, \texttt{sin}, \texttt{cos}, and many others.
+%\end{itemize}
+
+% Turn off the visualization to speed up the computation by commenting out the line \texttt{plot\_state(...} in the file \texttt{fastslam.m}.
+
+\end{document}

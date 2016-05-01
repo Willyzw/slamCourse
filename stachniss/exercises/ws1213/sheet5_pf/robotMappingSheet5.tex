@@ -1,0 +1,69 @@
+\documentclass[12pt]{article}
+
+\input{../settings}
+\input{../kopf}
+
+\begin{center}
+{\bf \Large Sheet 5}
+
+{\large Topic: Particle Filter}
+
+Submission deadline: December, 3\\
+Submit to: \texttt{robotmappingtutors@informatik.uni-freiburg.de}
+\end{center}
+
+\subsubsection*{Exercise 1: Particle Filter}
+
+\begin{enumialpha}
+\item Describe briefly the main differences between the particle filter
+  and the Extended Kalman filter for state estimation.
+\item
+  Discuss briefly the advantages of the low variance re-sampling strategy.
+\end{enumialpha}
+
+\subsubsection*{Exercise 2: Particle Filter Implementation}
+
+First, implement the prediction step of a particle by sampling the
+motion of a robot given the distribution $p(x_t\mid u_{t-1},x_{t-1})$
+and second, implement the re-sampling step.
+
+\begin{enumialpha}
+\item
+  Implement the function in \texttt{prediction\_step.m}, which samples a
+  motion for each particle according to the motion model and the given
+  noise parameters.
+\item
+  Implement the function in \texttt{resample.m}, which re-samples the
+  set of particles utilizing the low variance re-sampling method.
+\end{enumialpha}
+
+To support this task, we provide a small \emph{Octave} framework (see
+course website). The above-mentioned tasks should be implemented inside
+the framework in the directory \texttt{octave} by completing the stubs.
+After implementing the missing parts, you can test your solutions by
+running the script in \texttt{motion.m} for the prediction step and
+\texttt{resampling.m} for the re-sample step.  The script
+\texttt{motion.m} will produce plots of the position of the particles
+and save them in the \texttt{plots} directory.
+
+
+Some implementation tips:
+\begin{itemize}
+  \item
+    The function \texttt{normrnd($\mu$, $\sigma$)} allows to draw
+    samples from a Gaussian with mean $\mu$ and standard deviation
+    $\sigma$.
+  \item The function \texttt{unifrnd($a$, $b$)} generates random samples
+    from the uniform distribution on $\left[ a, b \right]$.
+  %\item
+    %When converting implementations containing for-loops into a
+    %vectorized form it often helps to draw the dimensions of the data
+    %involved on a sheet of paper.
+  \item
+    Many of the functions in \emph{Octave} can handle matrices and
+    compute values along the rows or columns of a matrix. Some useful
+    functions that support this are \texttt{sum}, \texttt{cumsum},
+    \texttt{sqrt}, \texttt{sin}, \texttt{cos}, and many others.
+\end{itemize}
+
+\end{document}

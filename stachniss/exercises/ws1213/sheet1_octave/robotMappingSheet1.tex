@@ -1,0 +1,64 @@
+\documentclass[12pt,a4paper]{article}
+
+\input{../settings}
+\input{../kopf}
+
+
+\begin{center}
+{\bf \Large Sheet 1}
+
+{\large Topics: Octave}
+
+Submission deadline: Nov 5, 2012 \\
+Submit to: \texttt{robotmappingtutors@informatik.uni-freiburg.de}
+\end{center}
+
+\subsubsection*{General Notice}
+
+The exercises should be solved in groups of two students. In general,
+assignments will be published on Monday and should be submitted on the
+following Monday before class at the latest. Programming exercises should be submitted via email.
+
+We will be using Octave for the programming exercises. Octave is a command line
+program for solving numerical computations. Octave is mostly compatible with
+MATLAB and is freely available from \url{www.octave.org}. It is available for
+Linux, Mac OS, and Windows. Install Octave on your system in order to solve
+the programming assignments. A quick guide to Octave is given in the Octave cheat sheet which is available on the website of this lecture.
+
+\subsubsection*{Exercise 1: Getting familiar with Octave}
+
+The purpose of this exercise is to familiarize yourself with Octave and learn basic commands and operations that you will need when solving the programming exercises throughout this course.
+
+Go through the provided Octave cheat sheet and try out the different commands. Ask for help whenever you need it. As pointed out in the sheet, a very useful Octave command is \texttt{help}. Use it to get information about the correct way to call any Octave function.
+
+\subsubsection*{Exercise 2: Implementing an odometry model}
+
+Implement an Octave function to compute the pose of a robot based on given odometry commands and its previous pose. Do not consider the motion noise here.
+%As you saw in the lecture, the first step of a Bayes Filter is typically predicting the current pose of a robot according to a certain motion model. Your task is thus to implement a simplified version of the odomtery model you saw in the lecture (ignoring noise for now).
+
+For this exercise, we provide you with a small Octave framework for reading log files and to visualize results.  To use it, call the \texttt{main.m} script. This starts the main loop that computes the pose of the robot at each time step and plots it in the map. Inside the loop, the function \texttt{motion\_command} is called to compute the pose of the robot. Implement the missing parts in the file \texttt{motion\_command.m} to compute the pose $\vec x_t$ given $\vec x_{t-1}$ and the odometry command $\vec u_t$. These vectors are in the following form:
+
+\begin{equation*}
+      \vec x_t = \left(\begin{array}{c} x \\ y \\ \theta \end{array}\right) \quad
+      \vec u_t = \left(\begin{array}{c} \delta_{rot1} \\ \delta_{trans} \\ \delta_{rot2} \end{array}\right), \quad
+\end{equation*}
+
+where $\delta_{rot1}$ is the first rotation command, $\delta_{trans}$ is the translation command, and $\delta_{rot2}$ is the second rotation command. The pose is represented by the $3\times1$ vector $x$ in \texttt{motion\_model.m}. The odometry values can be accessed from the struct $u$ using $u.r1$, $u.t$, and $u.r2$ respectively.
+
+Compute the new robot pose according to the following motion model:
+
+\begin{equation*}
+     \begin{array}{l}
+     x_t = x_{t-1} + \delta_{trans} \cos(\theta_{t-1} + \delta_{rot1}) \\
+     y_t = y_{t-1} + \delta_{trans} \sin(\theta_{t-1} + \delta_{rot1}) \\
+     \theta_t = \theta_{t-1} + \delta_{rot1} + \delta_{rot2}
+     \end{array}
+\end{equation*}
+
+Test your implementation by running the \texttt{main.m} script. The script will generate a plot of the new robot pose at each time step and save an image of it in the \texttt{plots} directory. You can generate an animation from the saved images using \emph{ffmpeg} or \emph{mencoder}. With \emph{ffmpeg} you can use the following command to generate the animation from inside the \texttt{plots} directory:
+
+\texttt{ffmpeg -r 10 -b 500000 -i odom\_\%03d.png odom.mp4}
+\end{document}
+
+
+

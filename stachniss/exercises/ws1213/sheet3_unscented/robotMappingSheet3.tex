@@ -1,0 +1,95 @@
+\documentclass[12pt]{article}
+
+\input{../settings}
+\input{../kopf}
+
+\begin{center}
+{\bf \Large Sheet 3}
+
+{\large Topic: The Unscented Transform}
+
+Submission deadline: November, 19\\
+Submit to: \texttt{robotmappingtutors@informatik.uni-freiburg.de}
+\end{center}
+
+\subsubsection*{Exercise: The Unscented Transform}
+
+Implement the Unscented Transform (using \emph{Octave}). The
+implementation should consist of two parts, computing the sigma
+points and recovering the transformed Gaussian:
+
+\begin{enumialpha}
+
+\item Implement the function in \texttt{compute\_sigma\_points.m},
+  which samples the $2n+1$ sigma points given the mean vector and
+  covariance matrix. You should also compute the corresponding point
+  weights $w_m^{\lbrack i \rbrack}$ and $w_c^{\lbrack i \rbrack}$ for
+  $i= 0, \dots, 2n$.
+    
+\item Implement the function in \texttt{recover\_gaussian.m} to
+  compute the mean and covariance of the resulting distribution given
+  the transformed sigma points and their weights.
+\end{enumialpha}
+
+To support this task, we provide a small \emph{Octave} framework (see
+course website).  The above-mentioned tasks should be implemented
+inside the framework in the directory \texttt{octave} by completing
+the stubs. After implementing the missing parts, you can test your
+solution by running the main script. The program will produce a plot
+containing both the original and transformed distributions and save it
+in the \texttt{plots} directory.
+
+The code provides three different functions describing transformations
+applied to the distribution. Test your implementation on each of them
+by uncommenting the corresponding parts in \texttt{transform.m}.
+
+After completing the exercise, try other transformations by implementing
+them in \texttt{transform.m}. Moreover, you can change the parameters 
+($\alpha$ and $\kappa$) in \texttt{main.m} for computing $\lambda$ and 
+inspect how this affects the sampled sigma points.
+
+Hint: to compute the square root of the covariance matrix in
+\emph{Octave}, you can use the function \texttt{sqrtm}. Alternatively,
+you can compute the Cholesky decomposition using \texttt{chol}.
+
+
+
+
+
+
+\begin{comment}
+Some implementation tips:
+\begin{itemize}
+  \item
+    Be careful when averaging angles. One way to average a set of
+      angles $\left\{ \theta_1, \cdots \theta_N \right\}$ works as
+      follows. First we sum the unit-vectors of each rotation.
+      \begin{eqnarray*}
+        \bar x = \sum_{i=i}^N \cos(\theta_i)\\
+        \bar y = \sum_{i=i}^N \sin(\theta_i)
+      \end{eqnarray*}
+      Then the average angle $\bar \theta$ can be determined by
+      \begin{equation*}
+        \bar \theta = \mathrm{atan2}(\bar y, \bar x).
+      \end{equation*}
+    \item Turn off the visualization to speed up the computation by
+        commenting out the line \texttt{plot\_state(...} in the file
+        \texttt{ukf\_slam.m}.
+    \item While debugging, run the filter only for a few steps by
+        replacing the for-loop in \texttt{ukf\_slam.m} by
+        something along the lines of \texttt{for t = 1:50}.
+    \item The command \texttt{repmat} allows you to replicate a given
+        matrix in many different ways and is magnitudes faster than
+        using for-loops.
+    \item When converting implementations containing for-loops into a
+        vectorized form it often helps to draw the dimensions of the
+        data involved on a sheet of paper.
+    \item Many of the functions in \emph{Octave} can handle matrices and
+        compute values along the rows or columns of a matrix. Some
+        useful functions that support this are \texttt{sum},
+        \texttt{sqrt}, and many others.
+\end{itemize}
+\end{comment}
+
+\end{document}
+

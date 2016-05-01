@@ -1,0 +1,32 @@
+%\def\nl{\hfill\break\null}
+\oddsidemargin=0.3cm
+\topmargin=-1cm
+\textwidth=15cm
+\textheight=23cm
+\parindent=0cm
+\parskip=1mm
+
+
+\usepackage{graphicx}
+\DeclareMathOperator*{\argmin}{argmin}
+
+\newenvironment{enumialpha}{\begin{enumerate}
+  \def\theenumi{\alph{enumi}}
+  \def\labelenumi{(\theenumi)}}{\end{enumerate}}
+
+\newenvironment{enumiiroman}{\begin{enumerate}
+  \def\theenumii{\roman{enumii}}
+  \def\labelenumii{(\theenumii)}}{\end{enumerate}}
+
+
+\begin{document}
+
+\begin{tabular*}{15cm}{l@{\extracolsep{\fill}}r}
+  Albert-Ludwigs-Universit\"at Freiburg, Institut f\"ur Informatik \\
+PD Dr. Cyrill Stachniss \\  Lecture: Robot Mapping \\
+  Winter term 2012 
+\end{tabular*}
+
+
+
+\bigskip

@@ -1,0 +1,74 @@
+\documentclass[12pt]{article}
+
+\input{../settings}
+\input{../kopf}
+
+\begin{center}
+{\bf \Large Sheet 10}
+
+{\large Topic: Graph-Based SLAM}
+
+Submission deadline: February, 11\\
+Submit to: \texttt{robotmappingtutors@informatik.uni-freiburg.de}
+\end{center}
+
+\subsubsection*{Exercise: Max-Mixture Least Squares SLAM}
+
+Implement the max-mixture approximation for addressing multi-modal constraints in the context of least-squares, graph-based SLAM. To support this task, we provide a small \emph{Octave} framework (see
+course website).  The framework contains the following folders:
+
+\begin{description}
+\item [data]
+  contains several datasets, each gives the measurements of one SLAM
+  problem
+\item [octave]
+  contains the Octave framework with stubs to complete.
+\item [plots]
+  this folder is used to store images.
+\end{description}
+
+The below mentioned tasks should be implemented inside the framework in
+the directory \texttt{octave} by completing the stubs:
+\begin{itemize}
+\item
+  Implement the function in \texttt{compute\_best\_mixture\_component.m} for selecting the most likely mode of a constraint based on the max-mixture formulation.
+\item
+  Implement the function in \texttt{compute\_global\_error.m} for computing the total squared error of a graph.
+\item
+  Implement the function in \texttt{linearize\_and\_solve.m} for constructing and solving the linear approximation.
+\end{itemize}
+
+After implementing the missing parts, you can run the framework.  To do that, change into the directory octave and launch \emph{Octave}. To start the main loop, type \texttt{maxmixlsSlam}. The script will produce a plot showing the positions of the robot in each iteration.  These plots will be saved in the \texttt{plots} directory. 
+
+\clearpage
+The file $\langle$name of the dataset$\rangle$.png depicts the result that you should obtain after convergence for each dataset. Additionally, the initial and the final error ($\sum\limits_i e_{i}^T\Omega_{i}e_{i}$) for each dataset should be
+approximately:\\[1ex]
+\begin{tabular}{|l|c|c|}
+  \hline
+  dataset & initial error & final error\\\hline\hline
+  manhattan250.dat & 111& 6\\\hline
+    manhattan500.dat& 322 & 16\\\hline
+  manhattan1000a.dat & 3932& 32 \\\hline
+  manhattan1000b.dat & 3932 & 32\\\hline
+\end{tabular}\\
+
+
+Use the following criterion when computing the most likely mixture component, $k^*$, of a constraint:
+\begin{equation*}
+k^* = \argmin_k (\frac{1}{2}e_{ij_k}^T\Omega_{ij_k}e_{ij_k} - \mathrm{log}(w_k) + \frac{1}{2}\mathrm{log}(|\Sigma_{ij_k}|))
+\end{equation*}
+
+Some implementation tips:
+\begin{itemize}
+\item
+  You can use the \texttt{compute\_error\_pose\_pose\_constraint.m} function available to you to compute the error vector of a pose-pose constraint.
+\item
+  You can use the \texttt{linearize\_pose\_pose\_constraint.m} function available to you to compute the Jacobian of a pose-pose constraint.
+\item
+  Many of the functions in \emph{Octave} can handle matrices and
+  compute values along the rows or columns of a matrix. Some useful
+  functions that support this are \texttt{max}, \texttt{abs}, \texttt{sum},  \texttt{log},
+  \texttt{sqrt}, \texttt{sin}, \texttt{cos}, and many others.
+\end{itemize}
+
+\end{document}

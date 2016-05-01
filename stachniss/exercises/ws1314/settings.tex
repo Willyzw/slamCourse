@@ -1,0 +1,35 @@
+\usepackage{amsmath, amsthm, amssymb, amsbsy, amsfonts}
+\usepackage[plainpages=false,pdfpagelabels]{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=blue
+}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[utf8x]{inputenc}
+
+% Redefine the \vec command to use bold font instead of an arrow
+\renewcommand\vec[1]{\mathbf{#1}}
+
+%\def\nl{\hfill\break\null}
+\oddsidemargin=0.3cm
+\topmargin=-1cm
+\textwidth=15cm
+\textheight=23cm
+\parindent=0cm
+\parskip=1mm
+
+
+\usepackage{graphicx}
+\DeclareMathOperator*{\argmin}{argmin}
+
+\newenvironment{enumialpha}{\begin{enumerate}
+  \def\theenumi{\alph{enumi}}
+  \def\labelenumi{(\theenumi)}}{\end{enumerate}}
+
+\newenvironment{enumiiroman}{\begin{enumerate}
+  \def\theenumii{\roman{enumii}}
+  \def\labelenumii{(\theenumii)}}{\end{enumerate}}

@@ -1,0 +1,139 @@
+\documentclass[12pt]{article}
+
+\input{../settings}
+\input{../kopf}
+
+\begin{center}
+{\bf \Large Sheet 9}
+
+{\large Topic: Graph-Based SLAM}
+
+Submission deadline: February, 4\\
+Submit to: \texttt{robotmappingtutors@informatik.uni-freiburg.de}
+\end{center}
+
+\subsubsection*{Exercise: Graph-Based SLAM}
+
+Implement a least-squares method to address SLAM in its graph-based
+formulation. To support this task, we provide a small \emph{Octave} framework (see
+course website).  The framework contains the following folders:
+
+\begin{description}
+\item [data]
+  contains several datasets, each gives the measurements of one SLAM
+  problem
+\item [octave]
+  contains the Octave framework with stubs to complete.
+\item [plots]
+  this folder is used to store images.
+\end{description}
+
+The below mentioned tasks should be implemented inside the framework in
+the directory \texttt{octave} by completing the stubs:
+\begin{itemize}
+\item
+  Implement the function in \texttt{compute\_global\_error.m} for computing the
+  current error.
+\item
+  Implement the function in \texttt{linearize\_pose\_pose\_constraint.m} for
+  computing the error and the Jacobian of a pose-pose constraint.
+\item
+  Implement the function in
+  \texttt{linearize\_pose\_landmark\_constraint.m} for computing the
+  error and the Jacobian of a pose-landmark constraint.
+\item
+  Implement the function in \texttt{linearize\_and\_solve.m} for
+  constructing and solving the linear approximation.
+\item
+  Implement the update of the state vector and the stopping criterion in
+  \texttt{lsSLAM.m}.  A possible choice for the stopping criterion is
+  $\| \Delta x \|_\infty < \epsilon$, i.e., the maximum absolute $\Delta
+  x$ does not exceed $\epsilon$.
+\end{itemize}
+
+After implementing the missing parts, you can run the framework.  To do
+that, change into the directory octave and launch \emph{Octave}. To
+start the main loop, type \texttt{lsSLAM}. The script will produce a
+plot showing the positions of the robot and (if available) the positions
+of the landmarks in each iteration.  These plots will be saved in the
+\texttt{plots} directory. 
+
+\clearpage
+The file $\langle$name of the dataset$\rangle$.png depicts the result
+that you should obtain after convergence for each dataset.
+Additionally, the initial and the final error for each dataset should be
+approximately:\\[1ex]
+\begin{tabular}{|l|c|c|}
+  \hline
+  dataset & initial error & final error\\\hline\hline
+  simulation-pose-pose.dat & 138862234 & 8269\\\hline
+  simulation-pose-landmark.dat & 3030 & 474\\\hline
+  intel.dat & 1795139 & 360\\\hline
+  dlr.dat & 369655336 & 56860\\\hline
+\end{tabular}\\
+
+The state vector contains the following entities:
+\begin{itemize}
+  \item pose of the robot: $\mathbf{x}_i = (x_i \; y_i \; \theta_i)^T$\\
+    Hint: You may use the function $\mathrm{v2t}(\cdot)$ and
+    $\mathrm{t2v}(\cdot)$:
+    \begin{align*}
+    \mathrm{v2t}(\mathbf{x}_i) &= 
+    \begin{pmatrix}
+      R_i &\mathbf{t}_i\\
+      \mathbf{0} & 1
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      \cos(\theta_i) & -\sin(\theta_i) & x_i\\
+      \sin(\theta_i) & \cos(\theta_i) & y_i\\
+      0 & 0 & 1
+    \end{pmatrix}
+    = X_i\\
+    \mathrm{t2v}(X_i) &= \mathbf{x}_i
+    \end{align*}
+  \item position of a landmark: $\mathbf{x}_l = (x_l \; y_l)^T$
+\end{itemize}
+
+We consider the following error functions:
+\begin{itemize}
+  \item pose-pose constraint:
+    $\mathbf{e}_\mathit{ij} = \mathrm{t2v}(Z^{-1}_\mathit{ij} (X_i^{-1}
+    X_j))$, where $Z_\mathit{ij} = \mathrm{v2t}(\mathbf{z}_\mathit{ij})$
+    is the transformation matrix of the measurement $\mathbf{z}_{ij}^T =
+    (\mathbf{t}_{ij}^T, \theta_{ij})$.\\
+    Hint: For computing the Jacobian, write the error function with
+    rotation matrices and translation vectors:
+    \begin{align*}
+      \mathbf{e}_\mathit{ij} &=
+      \begin{pmatrix}
+        R_{ij}^T (R_i^T(\mathbf{t}_j-\mathbf{t}_i)-\mathbf{t}_{ij})\\
+        \theta_j -\theta_i - \theta_{ij}\\
+      \end{pmatrix}
+    \end{align*}
+  \item pose-landmark constraint:
+    $\mathbf{e}_\mathit{il} = R_i^T (\mathbf{x}_l - \mathbf{t}_i) -
+    \mathbf{z}_{il}$
+\end{itemize}
+
+Some implementation tips:
+\begin{itemize}
+\item
+  The functions v2t($\cdot$) and t2v($\cdot$) to convert
+  between a pose vector and a transformation matrix are available in the
+  Octave framework.
+\item
+  You may first implement the functions in
+  \texttt{linearize\_pose\_pose\_constraint.m} and apply the framework
+  to the datasets which do not contain landmarks.
+\item
+  When solving the linear system exploit the sparseness of the matrix.
+  You may resort to the backslash operator.
+\item
+  Many of the functions in \emph{Octave} can handle matrices and
+  compute values along the rows or columns of a matrix. Some useful
+  functions that support this are \texttt{max}, \texttt{abs}, \texttt{sum},  \texttt{log},
+  \texttt{sqrt}, \texttt{sin}, \texttt{cos}, and many others.
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,58 @@
+\documentclass[12pt]{article}
+
+\input{../settings}
+
+\begin{document}
+
+\input{../header}
+
+\begin{center}
+{\bf \Large Sheet 5}
+
+{\large Topic: The Unscented Transform}
+
+Submission deadline: Nov.~25\\
+Submit to: \texttt{robotmappingtutors@informatik.uni-freiburg.de}
+\end{center}
+
+\subsubsection*{Exercise: The Unscented Transform}
+
+Implement the Unscented Transform (using \emph{Octave}). The
+implementation should consist of two parts, computing the sigma
+points and recovering the transformed Gaussian:
+
+\begin{enumialpha}
+
+\item Implement the function in \texttt{compute\_sigma\_points.m},
+  which samples the $2n+1$ sigma points given the mean vector and
+  covariance matrix. You should also compute the corresponding point
+  weights $w_m^{\lbrack i \rbrack}$ and $w_c^{\lbrack i \rbrack}$ for
+  $i= 0, \dots, 2n$.
+    
+\item Implement the function in \texttt{recover\_gaussian.m} to
+  compute the mean and covariance of the resulting distribution given
+  the transformed sigma points and their weights.
+\end{enumialpha}
+
+To support this task, we provide a small \emph{Octave} framework (see
+course website).  The above-mentioned tasks should be implemented
+inside the framework in the directory \texttt{octave} by completing
+the stubs. After implementing the missing parts, you can test your
+solution by running the main script. The program will produce a plot
+containing both the original and transformed distributions and save it
+in the \texttt{plots} directory.
+
+The code provides three different functions describing transformations
+applied to the distribution. Test your implementation on each of them
+by uncommenting the corresponding parts in \texttt{transform.m}.
+
+After completing the exercise, try other transformations by implementing
+them in \texttt{transform.m}. Moreover, you can change the parameters 
+($\alpha$ and $\kappa$) in \texttt{main.m} for computing $\lambda$ and 
+inspect how this affects the sampled sigma points.
+
+Hint: To compute the square root of the covariance matrix in
+\emph{Octave}, you can use the function \texttt{sqrtm}. Alternatively,
+you can compute the Cholesky decomposition using \texttt{chol}.
+
+\end{document}

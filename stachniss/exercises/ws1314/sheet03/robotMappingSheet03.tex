@@ -1,0 +1,61 @@
+\documentclass[12pt,a4paper]{article}
+
+\input{../settings}
+
+\begin{document}
+
+\input{../header}
+
+\begin{center}
+{\bf \Large Sheet 3}
+
+{\large Topic: Extended Kalman Filter SLAM}
+
+Submission deadline: Nov.~11\\
+Submit to: \texttt{robotmappingtutors@informatik.uni-freiburg.de}
+\end{center}
+
+\subsubsection*{Exercise 1: Bayes Filter and EKF}
+
+\begin{enumialpha}
+\item Describe briefly the two main steps of the Bayes filter in your own words.
+
+\item Describe briefly the meaning of the following probability density functions: $p(x_t \mid u_t, x_{t-1})$, $p(z_t \mid x_t)$, and $\text{bel}(x_t)$, which are processed by the Bayes filter. 
+
+\item Specify the (normal) distributions that correspond to the above mentioned three terms in EKF SLAM.
+
+\item Explain in a few sentences all of the components of the EKF SLAM algorithm, \mbox{i.\ e.}, $\mu_t$, $\Sigma_t$, $g$, $G^x_t$, $G_t$, $R^x_t$, $R_t$, $h$, $H_t$, $Q_t$, $K_t$ and why they are needed. Specify the dimensionality of these components.
+\end{enumialpha}
+
+\subsubsection*{Exercise 2: Jacobians}
+
+\begin{enumialpha}
+    \item Derive the Jacobian matrix~$G^x_t$ of the noise-free motion function~$g$ with respect to the pose of the robot. Use the odometry motion model as in exercise sheet~1:
+
+\begin{equation*}
+     \left(\begin{array}{c} x_t \\ y_t \\ \theta_t \end{array}\right) = \left(\begin{array}{c} x_{t-1} \\ y_{t-1} \\ \theta_{t-1} \end{array}\right) + \left(\begin{array}{c} \delta_{trans} \cos(\theta_{t-1} + \delta_{rot1}) \\ \delta_{trans} \sin(\theta_{t-1} + \delta_{rot1}) \\ \delta_{rot1} + \delta_{rot2} \end{array}\right).
+\end{equation*}
+
+Do not use Octave for this part of the exercise.
+
+    \item Derive the Jacobian matrix~$^{\textrm{low}}H^i_t$ of the noise-free sensor function~$h$ corresponding to the $i^{\textrm{th}}$ measurement:
+
+\begin{equation*}
+ h(\bar{\mu}_t,j) =  z^i_t = \left(\begin{array}{c} r^i_t \\ \phi^i_t  \end{array}\right) = \left(\begin{array}{c} \sqrt{(\bar{\mu}_{j,x} - \bar{\mu}_{t,x})^2 + (\bar{\mu}_{j,y} - \bar{\mu}_{t,y})^2} \\ \textrm{atan2}(\bar{\mu}_{j,y} - \bar{\mu}_{t,y}, \bar{\mu}_{j,x} - \bar{\mu}_{t,x})-\bar{\mu}_{t,\theta} \end{array}\right),
+\end{equation*}
+where $(\bar{\mu}_{j,x}, \bar{\mu}_{j,y})^T$ is the pose of the $j^{\textrm{th}}$ landmark, $(\bar{\mu}_{t,x}, \bar{\mu}_{t,y}, \bar{\mu}_{t,\theta})^T$ is the pose of the robot at time $t$, and $r^i_t$ and $\phi^i_t$ are respectively the observed range and bearing of the landmark. Do not use Octave for this part of the exercise.\\
+
+\emph{Hint:} use $\frac{\partial}{\partial x}\textrm{atan2}(y,x) = \frac{-y}{x^2+y^2}$, and $\frac{\partial}{\partial y}\textrm{atan2}(y,x) = \frac{x}{x^2+y^2}$.
+
+\begin{comment}
+\begin{equation*}
+\begin{array}{l}
+\displaystyle\frac{\partial}{\partial x}\textrm{atan2}(y,x) = \frac{-y}{x^2+y^2},\\ \\
+\displaystyle\frac{\partial}{\partial y}\textrm{atan2}(y,x) = \frac{x}{x^2+y^2}.\\
+\end{array}
+\end{equation*}
+\end{comment}
+
+\end{enumialpha}
+
+\end{document}
